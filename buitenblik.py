@@ -1,69 +1,91 @@
 import streamlit as st
 
-st.set_page_config(page_title="MKB4Real Buitenblik", page_icon="⚖️", layout="wide")
+# MKB4Real Brand Setup
+st.set_page_config(page_title="MKB4Real Mini Business Scan", page_icon="🎯", layout="centered")
 
-st.title("MKB4Real: De Buitenblik Impact-Monitor")
-st.markdown("### *Van Systeem-dwang naar Menselijke Logica*")
+st.title("MKB4Real: Mini Business Scan")
+st.markdown("*De Buitenblik: Vreemde ogen zien wat jij niet meer ziet*")
+st.markdown("---")
 
-# --- SIDEBAR: DE DIAGNOSE ---
-st.sidebar.header("1. De Nulmeting")
-scenario = st.sidebar.selectbox("Kies het scenario:", 
-    ["Workday Migratie", "Lokale Alignment (BE/DE)", "Bureaucratie Sanering"])
+# --- DATA ---
+scenario_data = {
+    "De IT-Valstrik": {
+        "onderstroom": "De techniek dicteert, de menselijke logica volgt. Je asfalteert een koepad.",
+        "risico": "Digitale bureaucratie. Medewerkers haken af of werken 'om het systeem heen'.",
+        "reset": "Proces-sanering. We herstellen de regie: de techniek faciliteert de mens weer."
+    },
+    "Papieren Werkelijkheid": {
+        "onderstroom": "Er is een prachtig plan, maar op de werkvloer landt het niet. Gebrek aan verbinding.",
+        "risico": "Cynisme op de werkvloer en plannen die stof vangen in de directiela.",
+        "reset": "De 'Vloer-check'. We vertalen strategie naar actie op één A4."
+    },
+    "Onzichtbare Onvreden": {
+        "onderstroom": "Stille krachten haken af. Er wordt over elkaar gepraat in plaats van met elkaar.",
+        "risico": "Onverwacht verloop van talent en een sfeer van 'het zal mijn tijd wel duren'.",
+        "reset": "De Dialoog. Ik voer de gesprekken die jij zelf niet meer kunt voeren."
+    },
+    "Stroeve Samenwerking": {
+        "onderstroom": "Eilandjes. Iedereen doet zijn best, maar de flow tussen afdelingen ontbreekt.",
+        "risico": "Dubbel werk, overlap en een enorme hoeveelheid 'communicatie-waste'.",
+        "reset": "Silo-doorbraak. We herstellen de verbinding tussen Organisatie, Mens en Proces."
+    }
+}
 
-# De hoofdschuif: De Buitenblik factor
-regie = st.sidebar.slider("Pas de 'Buitenblik' toe (Regie niveau):", 0, 100, 44)
+# --- INPUT ---
+st.sidebar.header("Scan Instellingen")
+scenario_keuze = st.sidebar.selectbox(
+    "Welke situatie herken je?", 
+    options=list(scenario_data.keys()),
+    key="scenario_box"
+)
 
-st.sidebar.markdown("---")
-st.sidebar.write("**MKB4Real Methode:**")
-st.sidebar.caption("Organisation | People | Process")
+regie = st.sidebar.slider("Regie-niveau (Buitenblik Factor):", 0, 100, 44)
 
-# --- HOOFDSCHERM: DE IMPACT ---
+# --- IMPACT DASHBOARD ---
+st.markdown("### Resultaat Mini Business Scan")
 col1, col2, col3 = st.columns(3)
 
 with col1:
     waste = 100 - regie
-    st.metric("Waste (Verspilling)", f"{waste}%", delta=f"-{regie}%", delta_color="inverse")
+    st.metric("Waste (Ruis)", f"{waste}%", delta=f"-{regie}%", delta_color="inverse")
     st.progress(waste)
 
 with col2:
-    adoptie = int(regie * 0.9)
-    st.metric("Adoptie-bereidheid", f"{adoptie}%", delta=f"+{regie}%")
-    st.progress(adoptie)
+    flow = int(regie * 0.9)
+    st.metric("Logica & Flow", f"{flow}%", delta=f"+{regie}%")
+    st.progress(flow)
 
 with col3:
-    snelheid = int(regie * 1.2) if regie * 1.2 <= 100 else 100
-    st.metric("Snelheid naar Resultaat", f"{snelheid}%", delta=f"{regie}%")
-    st.progress(snelheid)
+    rust = int(regie * 1.1) if regie * 1.1 <= 100 else 100
+    st.metric("Focus & Rust", f"{rust}%", delta=f"{int(regie/2)}%")
+    st.progress(rust)
 
-# --- DE NIEUWE LOGICA-SECTIE ---
-st.markdown("### 🔍 De Logica achter de Score")
-
-with st.expander("Klik hier om te zien hoe de 'Buitenblik' de cijfers beïnvloedt", expanded=True):
-    l_col, r_col = st.columns(2)
-    
-    with l_col:
-        st.write("**Waarom is de Waste zo hoog?**")
-        st.info(f"""
-        Bij een score van **{regie}** zien we een directe correlatie:
-        - **Approval-hell:** {int(waste * 0.7)}% van de vertraging komt door onnodige hiërarchie.
-        - **Shadow IT:** Er wordt voor {int(waste * 0.4)}% buiten het systeem om gewerkt.
-        - **Data-reparatie:** {int(waste * 0.3)}% van de tijd gaat op aan het herstellen van fouten.
-        """)
-        
-    with r_col:
-        st.write("**Hoe verhogen we de Flow?**")
-        st.success(f"""
-        Door de Regie te verhogen naar **80+**, realiseren we:
-        - **CUI Minimalisatie:** Minder schermen, meer resultaat.
-        - **Absorptievermogen:** Mensen begrijpen de logica weer.
-        - **Zelfsturing:** Het systeem valideert, de mens beslist.
-        """)
-
-# --- DE CONCLUSIE ---
+# --- DE SPIEGEL ---
 st.markdown("---")
-if regie < 50:
-    st.error(f"**Analyse:** Je digitaliseert momenteel een 'geasfalteerd koepad'. De tool werkt, maar de organisatie lekt.")
-else:
-    st.success(f"**Analyse:** De 'H' is terug in HR-Tech. De techniek faciliteert de logica.")
+details = scenario_data[scenario_keuze]
 
-st.caption(f"Status: {scenario} | MKB4Real 'Buitenblik' Tool v2.0")
+with st.container():
+    if regie < 50:
+        st.error(f"**Analyse: {scenario_keuze}**")
+        st.write(f"👉 **De Onderstroom:** *{details['onderstroom']}*")
+        st.write(f"⚠️ **Het Risico:** {details['risico']}")
+    else:
+        st.success(f"**De Reset-Route**")
+        st.write(f"🎯 **Aanpak:** *{details['reset']}*")
+        st.write("✅ **Winst:** Directe regie en rust in je bedrijf door een plan dat je mensen dient.")
+
+# --- DE MKB4REAL BELOFTE ---
+st.markdown("---")
+st.info("### 🤝 Mijn Belofte bij een Deep Dive")
+st.write("""
+Als ik na drie dagen geen fundamenteel verbeterpunt vind in de verbinding tussen je mensen en je organisatie, 
+dan praten we niet over de factuur, maar over de koffie.
+""")
+
+# --- SIDEBAR VOLGENDE STAPPEN ---
+st.sidebar.markdown("---")
+st.sidebar.subheader("Verder kijken?")
+st.sidebar.write("**1. De Scherpsessie (€ 265,-)**")
+st.sidebar.caption("2 uur focus. Resultaat: Stop-Start-Check op één A4.")
+st.sidebar.write("**2. De Business Scan (€ 2.950,-)**")
+st.sidebar.caption("3-daagse deep dive. Inclusief bovenstaande belofte.")
