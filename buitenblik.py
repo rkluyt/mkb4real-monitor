@@ -1,57 +1,69 @@
 import streamlit as st
 
-st.set_page_config(page_title="MKB4Real Impact Monitor", page_icon="⚖️")
+st.set_page_config(page_title="MKB4Real Buitenblik", page_icon="⚖️", layout="wide")
 
 st.title("MKB4Real: De Buitenblik Impact-Monitor")
-st.markdown("---")
+st.markdown("### *Van Systeem-dwang naar Menselijke Logica*")
 
-# Zijbalk voor de 'Pijn-analyse'
-st.sidebar.header("Scenario Analyse")
-knelpunt = st.sidebar.radio(
-    "Wat is de grootste blokkade?",
-    ("Wachten op goedkeuring (Waste)", 
-     "Systeem is leidend (IT-Valstrik)", 
-     "Medewerkers haken af (Adoptie-moeheid)",
-     "Data is onbetrouwbaar (Chaos)")
-)
+# --- SIDEBAR: DE DIAGNOSE ---
+st.sidebar.header("1. De Nulmeting")
+scenario = st.sidebar.selectbox("Kies het scenario:", 
+    ["Workday Migratie", "Lokale Alignment (BE/DE)", "Bureaucratie Sanering"])
 
-# De Slider: De Buitenblik factor
-st.subheader("Regie: Van Systeem-dwang naar Menselijke Logica")
-regie = st.slider("Hoeveel 'Buitenblik' passen we toe?", 0, 100, 20)
+# De hoofdschuif: De Buitenblik factor
+regie = st.sidebar.slider("Pas de 'Buitenblik' toe (Regie niveau):", 0, 100, 44)
 
-# De Impact Metrics (De Rekensom)
+st.sidebar.markdown("---")
+st.sidebar.write("**MKB4Real Methode:**")
+st.sidebar.caption("Organisation | People | Process")
+
+# --- HOOFDSCHERM: DE IMPACT ---
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    # Berekening voor verspilling (Tijd/Geld)
     waste = 100 - regie
-    st.metric("Waste (Inefficiëntie)", f"{waste}%", f"-{regie}%", delta_color="inverse")
-    st.caption("Onnodige vinkjes & wachttijd")
+    st.metric("Waste (Verspilling)", f"{waste}%", delta=f"-{regie}%", delta_color="inverse")
+    st.progress(waste)
 
 with col2:
-    # Berekening voor de 'H' factor
-    happiness = int(regie * 0.9)
-    st.metric("Adoptie-bereidheid", f"{happiness}%", f"+{regie}%")
-    st.caption("Focus op de menselijke maat")
+    adoptie = int(regie * 0.9)
+    st.metric("Adoptie-bereidheid", f"{adoptie}%", delta=f"+{regie}%")
+    st.progress(adoptie)
 
 with col3:
-    # Time-to-Value
-    speed = int(regie * 1.2)
-    if speed > 100: speed = 100
-    st.metric("Snelheid naar Resultaat", f"{speed}%", f"{regie}%")
-    st.caption("Flow in de operatie")
+    snelheid = int(regie * 1.2) if regie * 1.2 <= 100 else 100
+    st.metric("Snelheid naar Resultaat", f"{snelheid}%", delta=f"{regie}%")
+    st.progress(snelheid)
 
+# --- DE NIEUWE LOGICA-SECTIE ---
+st.markdown("### 🔍 De Logica achter de Score")
+
+with st.expander("Klik hier om te zien hoe de 'Buitenblik' de cijfers beïnvloedt", expanded=True):
+    l_col, r_col = st.columns(2)
+    
+    with l_col:
+        st.write("**Waarom is de Waste zo hoog?**")
+        st.info(f"""
+        Bij een score van **{regie}** zien we een directe correlatie:
+        - **Approval-hell:** {int(waste * 0.7)}% van de vertraging komt door onnodige hiërarchie.
+        - **Shadow IT:** Er wordt voor {int(waste * 0.4)}% buiten het systeem om gewerkt.
+        - **Data-reparatie:** {int(waste * 0.3)}% van de tijd gaat op aan het herstellen van fouten.
+        """)
+        
+    with r_col:
+        st.write("**Hoe verhogen we de Flow?**")
+        st.success(f"""
+        Door de Regie te verhogen naar **80+**, realiseren we:
+        - **CUI Minimalisatie:** Minder schermen, meer resultaat.
+        - **Absorptievermogen:** Mensen begrijpen de logica weer.
+        - **Zelfsturing:** Het systeem valideert, de mens beslist.
+        """)
+
+# --- DE CONCLUSIE ---
 st.markdown("---")
-
-# De 'Killer' Conclusie
-if regie < 40:
-    st.error(f"### 🚩 Risico: {knelpunt}")
-    st.write(f"In dit scenario wordt de organisatie gegijzeld door de techniek. De manager is een 'vinkjesmachine' geworden. Gevolg: De 'H' verdwijnt en de implementatiekosten lopen met 30% op door verborgen 'Waste'.")
-elif 40 <= regie < 80:
-    st.warning("### 🔄 De Kanteling: Logica keert terug")
-    st.write("De Buitenblik saneert de processen. We stoppen met het 'asfalteren van het koepad'. De wachttijden nemen af en de data wordt voor het eerst weer betrouwbaar.")
+if regie < 50:
+    st.error(f"**Analyse:** Je digitaliseert momenteel een 'geasfalteerd koepad'. De tool werkt, maar de organisatie lekt.")
 else:
-    st.success("### 🎯 Het MKB4Real Resultaat: Maximale Flow")
-    st.write("De techniek faciliteert de mens. Geen overlap, geen dubbel werk. De organisatie absorbeert de verandering moeiteloos omdat de proceslogica weer leidend is.")
+    st.success(f"**Analyse:** De 'H' is terug in HR-Tech. De techniek faciliteert de logica.")
 
-st.info(f"**Robert's Advies:** Voor {knelpunt} is geen nieuwe module nodig, maar een proces-reset.")
+st.caption(f"Status: {scenario} | MKB4Real 'Buitenblik' Tool v2.0")
