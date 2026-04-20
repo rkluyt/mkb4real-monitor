@@ -3,12 +3,12 @@ import streamlit as st
 # Setup: Mobile First & Branding
 st.set_page_config(page_title="MKB4Real Mini Scan", page_icon="🎯", layout="centered")
 
-# Custom CSS voor een 'Flyer-stijl' uitleg en gekleurde knoppen
+# Custom CSS voor de "Buitenblik" stijl en gekleurde knoppen
 st.markdown("""
     <style>
     .block-container { padding-top: 1rem; padding-bottom: 0rem; }
     
-    /* Taalkeuze beter zichtbaar */
+    /* Taalkeuze styling */
     .stRadio > label { font-weight: bold; color: #1e3d37 !important; font-size: 16px; }
     
     /* Scenario knoppen (2x2 grid) */
@@ -25,7 +25,6 @@ st.markdown("""
     }
 
     /* STOPLICHT KLEUREN VOOR HERKENNING */
-    /* Rood voor de pijn, Oranje voor twijfel, Groen voor ok */
     div[data-testid="column"]:nth-of-type(1) button {
         background-color: #d9534f !important; 
         color: white !important;
@@ -42,7 +41,7 @@ st.markdown("""
         border: none !important;
     }
 
-    /* Stijl voor de nieuwe Help Card (Onderbouwing) */
+    /* Stijl voor de Help Card inclusief Formules */
     .help-card {
         background-color: #f0f4f2;
         padding: 18px;
@@ -53,6 +52,7 @@ st.markdown("""
     }
     .help-header { font-weight: bold; font-size: 16px; margin-bottom: 10px; border-bottom: 1px solid #1e3d37; padding-bottom: 5px; }
     .help-item { margin-bottom: 12px; font-size: 14px; line-height: 1.4; }
+    .formula { font-family: monospace; font-weight: bold; background-color: #ffffff; padding: 2px 4px; border-radius: 4px; }
     
     .scenario-text { background-color: #f8f9fa; padding: 15px; border-left: 5px solid #1e3d37; border-radius: 5px; margin-bottom: 15px; }
     h1 { font-size: 26px !important; color: #1e3d37; }
@@ -81,10 +81,10 @@ data = {
         "help_title": "🔍 Hoe we de impact berekenen",
         "help_html": """
 <div class="help-card">
-    <div class="help-header">De Buitenblik Methodiek</div>
-    <div class="help-item"><b>🗑️ Waste (Ruis)</b><br>De energie die weglekt door onduidelijke regie en systeemdwang. Hoe lager de regie, hoe hoger de ruis.</div>
-    <div class="help-item"><b>🌊 Flow (Rendement)</b><br>De soepelheid waarmee actie door de keten beweegt. Goede regie creëert proces-logica.</div>
-    <div class="help-item"><b>🧘 Rust (Focus)</b><br>De mentale ruimte voor innovatie. Wanneer de basis (regie) klopt, ontstaat er energie.</div>
+    <div class="help-header">De Buitenblik Logica</div>
+    <div class="help-item"><b>🗑️ Waste (Ruis)</b><br>Energie die weglekt door onduidelijke regie en systeemdwang.<br><span class="formula">W = 100 - Regie</span></div>
+    <div class="help-item"><b>🌊 Flow (Rendement)</b><br>De soepelheid waarmee actie door de keten beweegt.<br><span class="formula">F = Regie x 0.9</span></div>
+    <div class="help-item"><b>🧘 Rust (Focus)</b><br>De mentale ruimte voor innovatie en energie.<br><span class="formula">Rust = Regie x 1.1</span></div>
 </div>
 """,
         "sol_1": "**De Scherpsessie (€ 265,-)**: 2 uur focus op één situatie.",
@@ -106,16 +106,16 @@ data = {
         "help_title": "🔍 How we calculate impact",
         "help_html": """
 <div class="help-card">
-    <div class="help-header">The 'Outside-In' Methodology</div>
-    <div class="help-item"><b>🗑️ Waste (Noise)</b><br>Energy lost due to lack of control and system constraints. Low control equals high noise.</div>
-    <div class="help-item"><b>🌊 Flow (Yield)</b><br>The smoothness of action moving through the value chain. Proper control ensures logic.</div>
-    <div class="help-item"><b>🧘 Peace (Focus)</b><br>Mental space for innovation. When the foundation (control) is solid, energy returns.</div>
+    <div class="help-header">The 'Outside-In' Logic</div>
+    <div class="help-item"><b>🗑️ Waste (Noise)</b><br>Energy lost due to lack of control and system constraints.<br><span class="formula">W = 100 - Control</span></div>
+    <div class="help-item"><b>🌊 Flow (Yield)</b><br>Smoothness of action moving through the value chain.<br><span class="formula">F = Control x 0.9</span></div>
+    <div class="help-item"><b>🧘 Peace (Focus)</b><br>Mental space for innovation and energy.<br><span class="formula">Peace = Control x 1.1</span></div>
 </div>
 """,
         "sol_1": "**Sharp Session (€ 265,-)**: 2 hours of deep focus.",
         "sol_2": "**3-day Deep Dive (€ 2.950,-)**: 3 days of control on-site.",
         "cta": "📧 Get in touch",
-        "promise": "No fundamental improvements found in three days? No invoice!"
+        "promise": "MKB4Real Promise: No fundamental improvement found in three days? No invoice!"
     }
 }
 
@@ -128,7 +128,7 @@ if 'regie' not in st.session_state: st.session_state.regie = None
 # --- UI ---
 st.title("Mini Business Scan")
 
-# 1. SCENARIO TEGELS (2x2 voor stabiliteit op mobiel)
+# 1. SCENARIO TEGELS
 st.write(f"**{c['step1']}**")
 col_t_l, col_t_r = st.columns(2)
 col_b_l, col_b_r = st.columns(2)
@@ -146,14 +146,14 @@ if st.session_state.sc:
     s = c["details"][st.session_state.sc]
     st.markdown(f"""<div class="scenario-text"><strong>{s['lbl']}:</strong> {s['under']}</div>""", unsafe_allow_html=True)
 
-    # 3. IMPACT BUTTONS (Gekleurd via CSS)
+    # 3. IMPACT BUTTONS
     st.write(f"**{c['step2']}**")
     b1, b2, b3 = st.columns(3)
     if b1.button(c["btn"][0]): st.session_state.regie = 25
     if b2.button(c["btn"][1]): st.session_state.regie = 55
     if b3.button(c["btn"][2]): st.session_state.regie = 85
 
-# 4. DASHBOARD & IMPACT
+# 4. DASHBOARD
 if st.session_state.regie is not None:
     r = st.session_state.regie
     st.markdown("---")
@@ -162,14 +162,12 @@ if st.session_state.regie is not None:
     with m2: st.metric("Flow", f"{int(r*0.9)}%"); st.progress(int(r*0.9))
     with m3: st.metric("Rust", f"{min(int(r*1.1), 100)}%"); st.progress(min(int(r*1.1), 100))
 
-    # De Nieuwe Opgemaakte Help Card
+    # De Help Card MET Formules
     with st.expander(c["help_title"]):
         st.markdown(c["help_html"], unsafe_allow_html=True)
 
-    # Oplossingen uit Flyer
     st.info(f"### {c['sol_1']}\n\n{c['sol_2']}")
     
-    # CTA Knop
     contact_url = "mailto:contact@mkb4real.nl?subject=Aanvraag%20Mini%20Scan"
     st.markdown(f'<a href="{contact_url}" style="text-decoration:none;"><button style="background-color:#1e3d37; color:white; border:none; border-radius:8px; font-size:18px; cursor:pointer;">{c["cta"]}</button></a>', unsafe_allow_html=True)
     st.caption(f"**{c['promise']}**")
